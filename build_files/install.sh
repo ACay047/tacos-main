@@ -59,7 +59,6 @@ KERNEL_RPMS=(
     "/tmp/kernel-rpms/kernel-modules-${KERNEL_VERSION}.rpm"
     "/tmp/kernel-rpms/kernel-modules-core-${KERNEL_VERSION}.rpm"
     "/tmp/kernel-rpms/kernel-modules-extra-${KERNEL_VERSION}.rpm"
-    "/tmp/kernel-rpms/kernel-uki-virt-${KERNEL_VERSION}.rpm"
 )
 dnf5 -y install "${KERNEL_RPMS[@]}"
 dnf5 versionlock add kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra
@@ -91,6 +90,11 @@ if [[ "$IMAGE_NAME" == "silverblue" ]]; then
         --repo=copr:copr.fedorainfracloud.org:ublue-os:staging \
         gnome-software gnome-software
     dnf5 versionlock add gnome-software
+fi
+
+# Prevent partial QT upgrades that may break SDDM/KWin
+if [[ "$IMAGE_NAME" == "kinoite" ]]; then
+    dnf5 versionlock add "qt6-*"
 fi
 
 # run common packages script
